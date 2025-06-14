@@ -1,154 +1,259 @@
 <!DOCTYPE html>
 <html lang="uk">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Керування товарами</title>
-    
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f5f6fa;
-        margin: 0;
-        padding: 20px;
-      }
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        background: #fff;
-        padding: 20px 30px 40px;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      }
-      h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        color: #333;
-      }
-      input[type="text"] {
-        width: 100%;
-        padding: 10px 12px;
-        margin: 6px 0 16px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 15px;
-      }
-      button {
-        padding: 10px 14px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      button:disabled {
-        background-color: #7aa7ff;
-        cursor: not-allowed;
-      }
-      .product-list {
-        list-style: none;
-        padding-left: 0;
-      }
-      .product-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Керування товарами та групами</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f6fa;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin: 6px 0 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+    button {
+      padding: 8px 12px;
+      margin: 4px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:disabled {
+      background-color: #7aa7ff;
+      cursor: not-allowed;
+    }
+    .group, .product {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .group {
+      background-color: #e0e0e0;
+      margin-bottom: 10px;
+    }
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
 
-    <script type="text/babel">
-      const { useState } = React;
+<script type="text/babel">
+  const { useState } = React;
 
-      
-      const AddProduct = ({ onAdd }) => {
-        const [productName, setProductName] = useState("");
+  const App = () => {
+    const [groups, setGroups] = useState([]);
+    const [newGroupName, setNewGroupName] = useState("");
 
-        const handleSubmit = (e) => {
-          e.preventDefault();
-          const trimmed = productName.trim();
-          if (trimmed) {
-            onAdd(trimmed);
-            setProductName("");
-          }
-        };
+    const addGroup = () => {
+      if (newGroupName.trim() === "") return;
+      setGroups([
+        ...groups,
+        { id: Date.now(), name: newGroupName.trim(), products: [] }
+      ]);
+      setNewGroupName("");
+    };
 
-        return (
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Назва товару"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-            />
-            <button type="submit" disabled={!productName.trim()}>Додати</button>
-          </form>
-        );
-      };
+    const updateGroup = (id, newName) => {
+      setGroups(groups.map(g => g.id === id ? { ...g, name: newName } : g));
+    };
 
-      
-      const SearchBar = ({ searchTerm, onSearch }) => (
+    const deleteGroup = (id) => {
+      if (confirm("Ви впевнені, що хочете видалити цю групу?")) {
+        setGroups(groups.filter(g => g.id !== id));
+      }
+    };
+
+    const addProduct = (groupId, productName) => {
+      setGroups(groups.map(g => {
+        if (g.id === groupId) {
+          return {
+            ...g,
+            products: [...g.products, { id: Date.now(), name: productName }]
+          };
+        }
+        return g;
+      }));
+    };
+
+    const updateProduct = (groupId, productId, newName) => {
+      setGroups(groups.map(g => {
+        if (g.id === groupId) {
+          return {
+            ...g,
+            products: g.products.map(p => p.id === productId ? { ...p, name: newName } : p)
+          };
+        }
+        return g;
+      }));
+    };
+
+    const deleteProduct = (groupId, productId) => {
+      setGroups(groups.map(g => {
+        if (g.id === groupId) {
+          return {
+            ...g,
+            products: g.products.filter(p => p.id !== productId)
+          };
+        }
+        return g;
+      }));
+    };
+
+    return (
+      <div className="container">
+        <h1>Керування групами товарів</h1>
         <input
           type="text"
-          placeholder="Пошук..."
-          value={searchTerm}
-          onChange={(e) => onSearch(e.target.value)}
+          placeholder="Назва нової групи"
+          value={newGroupName}
+          onChange={(e) => setNewGroupName(e.target.value)}
         />
-      );
+        <button onClick={addGroup} disabled={!newGroupName.trim()}>Додати групу</button>
 
-      
-      const ProductList = ({ products, onDelete }) => (
-        <ul className="product-list">
-          {products.map((p) => (
-            <li key={p.id} className="product-item">
-              <span>{p.name}</span>
-              <button onClick={() => onDelete(p.id)}>Видалити</button>
-            </li>
+        {groups.map(group => (
+          <Group
+            key={group.id}
+            group={group}
+            onUpdateGroup={updateGroup}
+            onDeleteGroup={deleteGroup}
+            onAddProduct={addProduct}
+            onUpdateProduct={updateProduct}
+            onDeleteProduct={deleteProduct}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const Group = ({ group, onUpdateGroup, onDeleteGroup, onAddProduct, onUpdateProduct, onDeleteProduct }) => {
+    const [editGroupName, setEditGroupName] = useState(group.name);
+    const [isEditingGroup, setIsEditingGroup] = useState(false);
+    const [newProductName, setNewProductName] = useState("");
+
+    const handleUpdateGroup = () => {
+      onUpdateGroup(group.id, editGroupName.trim());
+      setIsEditingGroup(false);
+    };
+
+    const handleAddProduct = () => {
+      if (newProductName.trim() === "") return;
+      onAddProduct(group.id, newProductName.trim());
+      setNewProductName("");
+    };
+
+    return (
+      <div className="group">
+        <div className="group-header">
+          {isEditingGroup ? (
+            <>
+              <input
+                type="text"
+                value={editGroupName}
+                onChange={(e) => setEditGroupName(e.target.value)}
+              />
+              <div>
+                <button onClick={handleUpdateGroup}>Зберегти</button>
+                <button onClick={() => setIsEditingGroup(false)}>Скасувати</button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h3>{group.name}</h3>
+              <div>
+                <button onClick={() => setIsEditingGroup(true)}>Редагувати</button>
+                <button onClick={() => onDeleteGroup(group.id)}>Видалити</button>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div style={{ marginLeft: "20px" }}>
+          <input
+            type="text"
+            placeholder="Назва товару"
+            value={newProductName}
+            onChange={(e) => setNewProductName(e.target.value)}
+          />
+          <button onClick={handleAddProduct} disabled={!newProductName.trim()}>Додати товар</button>
+
+          {group.products.map(product => (
+            <Product
+              key={product.id}
+              product={product}
+              groupId={group.id}
+              onUpdateProduct={onUpdateProduct}
+              onDeleteProduct={onDeleteProduct}
+            />
           ))}
-        </ul>
-      );
+        </div>
+      </div>
+    );
+  };
 
-      
-      const App = () => {
-        const [products, setProducts] = useState([]);
-        const [searchTerm, setSearchTerm] = useState("");
+  const Product = ({ product, groupId, onUpdateProduct, onDeleteProduct }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editName, setEditName] = useState(product.name);
 
-        const addProduct = (name) => {
-          setProducts([
-            ...products,
-            { id: Date.now().toString(), name },
-          ]);
-        };
+    const handleUpdate = () => {
+      onUpdateProduct(groupId, product.id, editName.trim());
+      setIsEditing(false);
+    };
 
-        const deleteProduct = (id) => {
-          setProducts(products.filter((p) => p.id !== id));
-        };
+    return (
+      <div className="product">
+        {isEditing ? (
+          <>
+            <input
+              type="text"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+            />
+            <button onClick={handleUpdate}>Зберегти</button>
+            <button onClick={() => setIsEditing(false)}>Скасувати</button>
+          </>
+        ) : (
+          <>
+            <span>{product.name}</span>
+            <button onClick={() => setIsEditing(true)}>Редагувати</button>
+            <button onClick={() => onDeleteProduct(groupId, product.id)}>Видалити</button>
+          </>
+        )}
+      </div>
+    );
+  };
 
-        const filteredProducts = products.filter((p) =>
-          p.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        return (
-          <div className="container">
-            <h1>Керування товарами</h1>
-            <SearchBar searchTerm={searchTerm} onSearch={setSearchTerm} />
-            <AddProduct onAdd={addProduct} />
-            <ProductList products={filteredProducts} onDelete={deleteProduct} />
-          </div>
-        );
-      };
-
-      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-    </script>
-  </body>
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
 </html>
