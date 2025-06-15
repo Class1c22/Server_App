@@ -233,6 +233,10 @@
   <div id="groups" class="tab-content active">
     <h2>Управління групами товарів</h2>
 
+    <div class="form-group" style="max-width: 300px; margin-bottom:10px;">
+      <input type="text" id="groupSearch" placeholder="🔍 Пошук..." oninput="displayGroups(this.value)">
+    </div>
+
     <button onclick="openAddGroupModal()">➕ Додати групу</button>
     <button onclick="loadGroups()">🔄 Оновити</button>
 
@@ -254,6 +258,10 @@
   <!-- Товари -->
   <div id="products" class="tab-content">
     <h2>Управління товарами</h2>
+
+    <div class="form-group" style="max-width: 300px; margin-bottom:10px;">
+      <input type="text" id="productSearch" placeholder="🔍 Пошук..." oninput="displayProducts(this.value)">
+    </div>
 
     <button onclick="openAddProductModal()">➕ Додати товар</button>
     <button onclick="loadProducts()">🔄 Оновити</button>
@@ -291,6 +299,7 @@
         <th>Група</th>
         <th>Поточна кількість</th>
         <th>Ціна за шт.</th>
+        <th>Вартість</th>
         <th>Операції</th>
       </tr>
       </thead>
@@ -319,6 +328,27 @@
       <button type="submit">Зберегти</button>
       <button type="button" onclick="closeModal('groupModal')">Скасувати</button>
     </form>
+  </div>
+</div>
+
+<!-- Статистика по групі -->
+<div id="groupStatsModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('groupStatsModal')">&times;</span>
+    <h2 id="groupStatsTitle">Статистика групи</h2>
+    <table class="data-table" id="groupStatsTable">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Назва</th>
+        <th>Кількість</th>
+        <th>Ціна за шт.</th>
+        <th>Вартість</th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p style="margin-top:10px;font-weight:bold;" id="groupTotalValue"></p>
   </div>
 </div>
 
@@ -417,12 +447,22 @@
       }
   }
 
-  // Відображення груп
-  function displayGroups() {
+  // Відображення груп з фільтрацією
+  function displayGroups(search = undefined) {
+      if (search === undefined) {
+          const inp = document.getElementById('groupSearch');
+          search = inp ? inp.value : '';
+      }
+      search = (search || '').toLowerCase();
+
       const tbody = document.querySelector('#groupsTable tbody');
       tbody.innerHTML = '';
 
-      groups.forEach(group => {
+      const filteredGroups = groups.filter(group => {
+          return Object.values(group).some(val => String(val).toLowerCase().includes(search));
+      });
+
+      filteredGroups.forEach(group => {
           const row = document.createElement('tr');
           row.innerHTML = `
               <td>${group.id}</td>
@@ -430,6 +470,7 @@
               <td>${group.description || ''}</td>
               <td>
                   <button onclick="editGroup(${group.id})" class="btn-success">✏️ Редагувати</button>
+                  <button onclick="openGroupStats(${group.id})" class="btn-success">📊 Статистика</button>
                   <button onclick="deleteGroup(${group.id})" class="btn-danger">🗑️ Видалити</button>
               </td>
           `;
@@ -437,12 +478,24 @@
       });
   }
 
-  // Відображення товарів
-  function displayProducts() {
+  // Відображення товарів з фільтрацією
+  function displayProducts(search = undefined) {
+      if (search === undefined) {
+          const inp = document.getElementById('productSearch');
+          search = inp ? inp.value : '';
+      }
+      search = (search || '').toLowerCase();
+
       const tbody = document.querySelector('#productsTable tbody');
       tbody.innerHTML = '';
 
-      products.forEach(product => {
+      const filteredProducts = products.filter(product => {
+          const group = groups.find(g => g.id === product.groupId);
+          return [product.id, product.name, product.manufacturer, product.quantity, product.pricePerUnit,
+                  group ? group.name : ''].some(val => String(val).toLowerCase().includes(search));
+      });
+
+      filteredProducts.forEach(product => {
           const group = groups.find(g => g.id === product.groupId);
           const row = document.createElement('tr');
           row.innerHTML = `
@@ -466,6 +519,8 @@
       const tbody = document.querySelector('#stockTable tbody');
       tbody.innerHTML = '';
 
+      let totalStockValue = 0;
+
       products.forEach(product => {
           const group = groups.find(g => g.id === product.groupId);
           const row = document.createElement('tr');
@@ -474,6 +529,7 @@
               <td>${group ? group.name : 'Невідома група'}</td>
               <td><strong>${product.quantity}</strong></td>
               <td>${product.pricePerUnit} грн</td>
+              <td>${(product.quantity * product.pricePerUnit).toFixed(2)} грн</td>
               <td class="stock-operations">
                   <input type="number" id="addQty_${product.id}" min="1" placeholder="Кількість">
                   <button onclick="addStock(${product.id})" class="btn-success">➕ Додати</button>
@@ -482,7 +538,16 @@
               </td>
           `;
           tbody.appendChild(row);
+          totalStockValue += product.quantity * product.pricePerUnit;
       });
+
+      // Підсумок
+      const summaryRow = document.createElement('tr');
+      summaryRow.innerHTML = `
+          <td colspan="4" style="text-align:right;font-weight:bold;">Загальна вартість:</td>
+          <td colspan="2" style="font-weight:bold;">${totalStockValue.toFixed(2)} грн</td>
+      `;
+      tbody.appendChild(summaryRow);
   }
 
   // Операції з групами
@@ -729,9 +794,42 @@
       }
   }
 
+  // Статистика групи
+  function openGroupStats(groupId) {
+      const group = groups.find(g => g.id === groupId);
+      if (!group) return;
+      document.getElementById('groupStatsTitle').textContent = `Статистика групи: ${group.name}`;
+
+      const tbody = document.querySelector('#groupStatsTable tbody');
+      tbody.innerHTML = '';
+      let total = 0;
+
+      const groupProducts = products.filter(p => p.groupId === groupId);
+      groupProducts.forEach(p => {
+          const row = document.createElement('tr');
+          const value = p.quantity * p.pricePerUnit;
+          total += value;
+          row.innerHTML = `
+              <td>${p.id}</td>
+              <td>${p.name}</td>
+              <td>${p.quantity}</td>
+              <td>${p.pricePerUnit} грн</td>
+              <td>${value.toFixed(2)} грн</td>
+          `;
+          tbody.appendChild(row);
+      });
+      document.getElementById('groupTotalValue').textContent = `Загальна вартість товарів у групі: ${total.toFixed(2)} грн`;
+      openModal('groupStatsModal');
+  }
+
   // Ініціалізація
   document.addEventListener('DOMContentLoaded', () => {
       loadGroups();
+      // Підключаємо слухачі вводу для пошуку
+      const gInp = document.getElementById('groupSearch');
+      if (gInp) gInp.addEventListener('input', () => displayGroups(gInp.value));
+      const pInp = document.getElementById('productSearch');
+      if (pInp) pInp.addEventListener('input', () => displayProducts(pInp.value));
   });
 </script>
 </body>
