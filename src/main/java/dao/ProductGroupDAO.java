@@ -1,23 +1,25 @@
 package dao;
 
 import model.ProductGroup;
-import db_connect.DBManager;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductGroupDAO {
 
+    private final Connection connection;
+
+    public ProductGroupDAO(Connection connection) {
+        this.connection = connection;
+    }
+
     public void addGroup(ProductGroup group) throws SQLException {
-        // Check if group name already exists
         if (isGroupNameExists(group.getName())) {
             throw new SQLException("Group name '" + group.getName() + "' already exists. Group names must be unique.");
         }
 
         String sql = "INSERT INTO product_groups (name, description) VALUES (?, ?)";
-        try (Connection conn = DBManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, group.getName());
             stmt.setString(2, group.getDescription());
             stmt.executeUpdate();
@@ -26,9 +28,7 @@ public class ProductGroupDAO {
 
     public ProductGroup getGroupById(int id) throws SQLException {
         String sql = "SELECT * FROM product_groups WHERE id = ?";
-        try (Connection conn = DBManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
@@ -43,8 +43,7 @@ public class ProductGroupDAO {
         List<ProductGroup> groups = new ArrayList<>();
         String sql = "SELECT * FROM product_groups ORDER BY name";
 
-        try (Connection conn = DBManager.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -55,15 +54,12 @@ public class ProductGroupDAO {
     }
 
     public void updateGroup(ProductGroup group) throws SQLException {
-        // Check if group name exists for other groups
         if (isGroupNameExistsForOthers(group.getName(), group.getId())) {
             throw new SQLException("Group name '" + group.getName() + "' already exists. Group names must be unique.");
         }
 
         String sql = "UPDATE product_groups SET name = ?, description = ? WHERE id = ?";
-        try (Connection conn = DBManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, group.getName());
             stmt.setString(2, group.getDescription());
             stmt.setInt(3, group.getId());
@@ -72,36 +68,27 @@ public class ProductGroupDAO {
     }
 
     public void deleteGroup(int id) throws SQLException {
-        Connection conn = null;
         try {
-            conn = DBManager.getConnection();
-            conn.setAutoCommit(false); // Start transaction
+            connection.setAutoCommit(false);
 
-            // First delete all products in the group
             String deleteProductsSql = "DELETE FROM products WHERE group_id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(deleteProductsSql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(deleteProductsSql)) {
                 stmt.setInt(1, id);
                 stmt.executeUpdate();
             }
 
-            // Then delete the group
             String deleteGroupSql = "DELETE FROM product_groups WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(deleteGroupSql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(deleteGroupSql)) {
                 stmt.setInt(1, id);
                 stmt.executeUpdate();
             }
 
-            conn.commit(); // Commit transaction
+            connection.commit();
         } catch (SQLException e) {
-            if (conn != null) {
-                conn.rollback(); // Rollback on error
-            }
+            connection.rollback();
             throw e;
         } finally {
-            if (conn != null) {
-                conn.setAutoCommit(true);
-                conn.close();
-            }
+            connection.setAutoCommit(true);
         }
     }
 
@@ -109,9 +96,7 @@ public class ProductGroupDAO {
         List<ProductGroup> groups = new ArrayList<>();
         String sql = "SELECT * FROM product_groups WHERE name LIKE ? OR description LIKE ? ORDER BY name";
 
-        try (Connection conn = DBManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             String likeKeyword = "%" + keyword + "%";
             stmt.setString(1, likeKeyword);
             stmt.setString(2, likeKeyword);
@@ -128,9 +113,7 @@ public class ProductGroupDAO {
     private boolean isGroupNameExists(String name) throws SQLException {
         String sql = "SELECT COUNT(*) FROM product_groups WHERE name = ?";
 
-        try (Connection conn = DBManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
 
@@ -144,9 +127,7 @@ public class ProductGroupDAO {
     private boolean isGroupNameExistsForOthers(String name, int excludeId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM product_groups WHERE name = ? AND id != ?";
 
-        try (Connection conn = DBManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
             stmt.setInt(2, excludeId);
             ResultSet rs = stmt.executeQuery();

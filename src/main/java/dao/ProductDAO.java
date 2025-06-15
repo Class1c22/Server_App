@@ -9,6 +9,12 @@ import java.math.BigDecimal;
 
 public class ProductDAO {
 
+    private final Connection connection;
+
+    public ProductDAO(Connection connection) {
+        this.connection = connection;
+    }
+
     public void addProduct(Product product) throws SQLException {
         // Check if product name already exists
         if (isProductNameExists(product.getName())) {
