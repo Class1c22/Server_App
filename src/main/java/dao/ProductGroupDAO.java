@@ -30,12 +30,12 @@ public class ProductGroupDAO {
         String sql = "SELECT * FROM product_groups WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return mapResultSetToGroup(rs);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToGroup(rs);
+                }
+                return null;
             }
-            return null;
         }
     }
 
@@ -101,9 +101,10 @@ public class ProductGroupDAO {
             stmt.setString(1, likeKeyword);
             stmt.setString(2, likeKeyword);
 
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                groups.add(mapResultSetToGroup(rs));
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    groups.add(mapResultSetToGroup(rs));
+                }
             }
         }
 
@@ -115,12 +116,12 @@ public class ProductGroupDAO {
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+                return false;
             }
-            return false;
         }
     }
 
@@ -130,12 +131,12 @@ public class ProductGroupDAO {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
             stmt.setInt(2, excludeId);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+                return false;
             }
-            return false;
         }
     }
 

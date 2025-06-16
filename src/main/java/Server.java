@@ -1,4 +1,7 @@
-import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpsServer;
+import com.sun.net.httpserver.HttpsConfigurator;
+import javax.net.ssl.*;
+import java.security.KeyStore;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.Headers;
@@ -13,6 +16,7 @@ import com.google.gson.JsonParser;
 
 import java.io.*;
 import java.net.InetSocketAddress;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -27,10 +31,9 @@ public class Server {
     private static Gson gson = new Gson();
 
     public static void main(String[] args) {
-        System.out.println("🔌 HTTP Сервер запускається на порті " + PORT + "...");
+        System.out.println("🔐 HTTPS Сервер запускається на порті " + PORT + "...");
 
         try {
-            // Підключення до бази даних
             dbConnection = DBManager.getConnection();
             productDAO = new ProductDAO(dbConnection);
             groupDAO = new ProductGroupDAO(dbConnection);
@@ -41,12 +44,21 @@ public class Server {
         }
 
         try {
-            HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
+            // Налаштування SSL
+            char[] password = "password".toCharArray();
+            KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream("keystore.jks"), password);
 
-            // Налаштування CORS для всіх запитів
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(ks, password);
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(kmf.getKeyManagers(), null, null);
+
+            HttpsServer server = HttpsServer.create(new InetSocketAddress(PORT), 0);
+            server.setHttpsConfigurator(new HttpsConfigurator(sslContext));
+
             server.createContext("/", new CORSHandler());
-
-            // API endpoints
             server.createContext("/group", new GetGroupHandler());
             server.createContext("/update-group", new UpdateGroupHandler());
             server.createContext("/groups", new GroupsHandler());
@@ -62,18 +74,9 @@ public class Server {
             server.setExecutor(null);
             server.start();
 
-            System.out.println("🌐 HTTP Сервер працює на http://localhost:" + PORT);
-            System.out.println("📡 Доступні endpoints:");
-            System.out.println("   GET  /groups - отримати всі групи");
-            System.out.println("   GET  /products - отримати всі товари");
-            System.out.println("   POST /add-group - додати групу");
-            System.out.println("   POST /add-product - додати товар");
-            System.out.println("   POST /add-stock - поповнити склад");
-            System.out.println("   POST /remove-stock - списати товар");
-            System.out.println("   DELETE /delete-group - видалити групу");
-
-        } catch (IOException e) {
-            System.err.println("❗ Помилка запуску сервера: " + e.getMessage());
+            System.out.println("🌐 HTTPS Сервер працює на https://localhost:" + PORT);
+        } catch (Exception e) {
+            System.err.println("❗ Помилка запуску HTTPS сервера: " + e.getMessage());
         }
     }
 
