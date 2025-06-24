@@ -1,8 +1,5 @@
 import db_connect.DBManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 import dao.ProductTransactionDAO;
 import dao.ProductDAO;
 
@@ -56,8 +53,8 @@ public class ProductTransactionDAOTest {
     }
 
     @Test
-    @DisplayName("processIncoming should add stock and insert transaction")
-    void processIncoming_shouldAddStockAndInsertTransaction() throws Exception {
+    @DisplayName("add stock")
+    void AddStock() throws Exception {
         int productId = 1;
         int initialStock = getProductStock(productId);
         int quantity = 5;
@@ -72,8 +69,8 @@ public class ProductTransactionDAOTest {
     }
 
     @Test
-    @DisplayName("processOutgoing should remove stock and insert transaction")
-    void processOutgoing_shouldRemoveStockAndInsertTransaction() throws Exception {
+    @DisplayName("remove stock")
+    void RemoveStock() throws Exception {
         int productId = 2;
         int initialStock = getProductStock(productId);
         int quantity = 3;
@@ -114,4 +111,5 @@ public class ProductTransactionDAOTest {
         }
         return false;
     }
+
 }

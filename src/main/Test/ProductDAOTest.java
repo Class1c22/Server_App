@@ -128,7 +128,6 @@ public class ProductDAOTest {
         try (Connection connection = DBManager.getConnection();
              Statement statement = connection.createStatement()) {
 
-            // Очистити таблиці після тестів
             statement.executeUpdate("DELETE FROM products");
             statement.executeUpdate("DELETE FROM product_groups");
         }
