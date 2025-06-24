@@ -200,7 +200,7 @@ public class ProductDAO {
         }
     }
     public void addStock(Connection conn, int productId, int quantity) throws SQLException {
-        String sql = "UPDATE products SET stock = stock + ? WHERE id = ?";
+        String sql = "UPDATE products SET quantity = quantity + ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, quantity);
             stmt.setInt(2, productId);
@@ -209,7 +209,7 @@ public class ProductDAO {
     }
 
     public void removeStock(Connection conn, int productId, int quantity) throws SQLException {
-        String sql = "UPDATE products SET stock = stock - ? WHERE id = ?";
+        String sql = "UPDATE products SET quantity = quantity - ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, quantity);
             stmt.setInt(2, productId);

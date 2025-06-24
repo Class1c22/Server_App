@@ -134,7 +134,6 @@ public class ProductDAOTest {
         }
     }
 
-    // Допоміжний метод для створення продукту
     private Product createTestProduct(String name) {
         Product product = new Product();
         product.setName(name);

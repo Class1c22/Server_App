@@ -5,10 +5,10 @@ import java.util.Objects;
 
 public class ProductTransaction {
     private int id;
-    private int productId; // foreign key до Product
-    private int quantity; // позитивне — надходження, негативне — списання
+    private int productId;
+    private int quantity;
     private LocalDateTime timestamp;
-    private String type; // "INCOMING" або "OUTGOING"
+    private String type;
 
     public ProductTransaction() {
     }
@@ -28,7 +28,6 @@ public class ProductTransaction {
         this.type = type;
     }
 
-    // Getters and setters
     public int getId() {
         return id;
     }

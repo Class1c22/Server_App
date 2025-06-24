@@ -21,7 +21,6 @@ public class ProductGroup {
         this.description = description;
     }
 
-    // Геттери та сеттери
     public int getId() {
         return id;
     }
@@ -46,7 +45,6 @@ public class ProductGroup {
         this.description = description;
     }
 
-    // Перевизначення toString()
     @Override
     public String toString() {
         return "ProductGroup{" +
@@ -56,7 +54,6 @@ public class ProductGroup {
                 '}';
     }
 
-    // equals() і hashCode() (опціонально, для колекцій і порівнянь)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

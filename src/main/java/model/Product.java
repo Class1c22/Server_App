@@ -13,7 +13,6 @@ public class Product {
     private BigDecimal pricePerUnit; // Замість double
     private int groupId;
 
-    // Геттери та сеттери
     public int getId() {
         return id;
     }

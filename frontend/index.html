@@ -229,7 +229,6 @@
     <button class="tab" onclick="showTab('stock')">📊 Склад</button>
   </div>
 
-  <!-- Групи товарів -->
   <div id="groups" class="tab-content active">
     <h2>Управління групами товарів</h2>
 
@@ -255,7 +254,6 @@
     </table>
   </div>
 
-  <!-- Товари -->
   <div id="products" class="tab-content">
     <h2>Управління товарами</h2>
 
@@ -284,7 +282,6 @@
     </table>
   </div>
 
-  <!-- Склад -->
   <div id="stock" class="tab-content">
     <h2>Операції зі складом</h2>
 
@@ -308,9 +305,7 @@
   </div>
 </div>
 
-<!-- Модальні вікна -->
 
-<!-- Додати/редагувати групу -->
 <div id="groupModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('groupModal')">&times;</span>
@@ -331,7 +326,7 @@
   </div>
 </div>
 
-<!-- Статистика по групі -->
+
 <div id="groupStatsModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('groupStatsModal')">&times;</span>
@@ -352,7 +347,7 @@
   </div>
 </div>
 
-<!-- Додати/редагувати товар -->
+
 <div id="productModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('productModal')">&times;</span>
@@ -394,7 +389,7 @@
   let groups = [];
   let products = [];
 
-  // Управління вкладками
+
   function showTab(tabName) {
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -407,7 +402,7 @@
       if (tabName === 'stock') loadProducts();
   }
 
-  // Утилітарні функції
+
   function showMessage(elementId, message, type) {
       const el = document.getElementById(elementId);
       el.textContent = message;
@@ -424,7 +419,6 @@
       document.getElementById(modalId).style.display = 'none';
   }
 
-  // Завантаження даних
   async function loadGroups() {
       try {
           const response = await fetch(`${API_BASE}/groups`);
@@ -447,7 +441,7 @@
       }
   }
 
-  // Відображення груп з фільтрацією
+
   function displayGroups(search = undefined) {
       if (search === undefined) {
           const inp = document.getElementById('groupSearch');
@@ -478,7 +472,7 @@
       });
   }
 
-  // Відображення товарів з фільтрацією
+
   function displayProducts(search = undefined) {
       if (search === undefined) {
           const inp = document.getElementById('productSearch');
@@ -514,7 +508,6 @@
       });
   }
 
-  // Відображення складських операцій
   function displayStock() {
       const tbody = document.querySelector('#stockTable tbody');
       tbody.innerHTML = '';
@@ -541,7 +534,7 @@
           totalStockValue += product.quantity * product.pricePerUnit;
       });
 
-      // Підсумок
+
       const summaryRow = document.createElement('tr');
       summaryRow.innerHTML = `
           <td colspan="4" style="text-align:right;font-weight:bold;">Загальна вартість:</td>
@@ -550,7 +543,7 @@
       tbody.appendChild(summaryRow);
   }
 
-  // Операції з групами
+
   function openAddGroupModal() {
       document.getElementById('groupModalTitle').textContent = 'Додати групу';
       document.getElementById('groupForm').reset();
@@ -591,7 +584,6 @@
       }
   }
 
-  // Операції з товарами
   function openAddProductModal() {
       document.getElementById('productModalTitle').textContent = 'Додати товар';
       document.getElementById('productForm').reset();
@@ -635,7 +627,6 @@
       }
   }
 
-  // Складські операції
   async function addStock(productId) {
       const qtyInput = document.getElementById(`addQty_${productId}`);
       const quantity = parseInt(qtyInput.value);
@@ -694,7 +685,6 @@
       }
   }
 
-  // Обробка форм
   document.getElementById('groupForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -774,7 +764,6 @@
       }
   });
 
-  // Оновлення селекту груп у формі товару
   function updateProductGroupSelect() {
       const select = document.getElementById('productGroup');
       select.innerHTML = '<option value="">Оберіть групу</option>';
@@ -787,14 +776,12 @@
       });
   }
 
-  // Закриття модальних вікон при кліку поза ними
   window.onclick = function(event) {
       if (event.target.classList.contains('modal')) {
           event.target.style.display = 'none';
       }
   }
 
-  // Статистика групи
   function openGroupStats(groupId) {
       const group = groups.find(g => g.id === groupId);
       if (!group) return;
@@ -822,7 +809,6 @@
       openModal('groupStatsModal');
   }
 
-  // Ініціалізація
   document.addEventListener('DOMContentLoaded', () => {
       loadGroups();
       // Підключаємо слухачі вводу для пошуку

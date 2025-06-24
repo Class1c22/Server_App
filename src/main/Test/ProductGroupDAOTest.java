@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductGroupDAOTest {
 
-    private static Connection connection;
+    static Connection connection;
     private static ProductGroupDAO groupDAO;
 
     @BeforeAll
@@ -89,7 +89,6 @@ public class ProductGroupDAOTest {
 
         assertNotNull(firstGroup);
 
-        // Try to rename second group to first group name
         ProductGroup groupToUpdate = groupDAO.getAllGroups().stream()
                 .filter(g -> g.getName().equals("TestGroup2"))
                 .findFirst()
