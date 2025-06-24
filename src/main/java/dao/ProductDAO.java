@@ -16,7 +16,7 @@ public class ProductDAO {
 
     public void addProduct(Product product) throws SQLException {
         if (isProductNameExists(product.getName())) {
-            throw new SQLException("Product name '" + product.getName() + "' already exists. Product names must be unique.");
+            throw new SQLException("Цей продукт '" + product.getName() + "' уже існує. Требв щоб продукт був унікальний.");
         }
 
         String sql = "INSERT INTO products (name, description, manufacturer, quantity, price_per_unit, group_id) " +
@@ -36,7 +36,7 @@ public class ProductDAO {
 
     public void updateProduct(Product product) throws SQLException {
         if (isProductNameExistsForOthers(product.getName(), product.getId())) {
-            throw new SQLException("Product name '" + product.getName() + "' already exists. Product names must be unique.");
+            throw new SQLException("Цей продукт'" + product.getName() + "' уже існує. Треба зоб продукт був унікальний.");
         }
 
         String sql = "UPDATE products SET name = ?, description = ?, manufacturer = ?, quantity = ?, price_per_unit = ?, group_id = ? WHERE id = ?";
@@ -76,7 +76,7 @@ public class ProductDAO {
     public void removeStock(int productId, int quantity) throws SQLException {
         Product product = getProductById(productId);
         if (product == null) {
-            throw new SQLException("Product not found");
+            throw new SQLException("Продукт не знайдено");
         }
 
         if (product.getQuantity() < quantity) {
