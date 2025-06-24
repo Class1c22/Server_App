@@ -1,7 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
+
 
 public class ProductTransaction {
     private int id;
@@ -13,28 +13,6 @@ public class ProductTransaction {
     public ProductTransaction() {
     }
 
-    public ProductTransaction(int productId, int quantity, LocalDateTime timestamp, String type) {
-        this.productId = productId;
-        this.quantity = quantity;
-        this.timestamp = timestamp;
-        this.type = type;
-    }
-
-    public ProductTransaction(int id, int productId, int quantity, LocalDateTime timestamp, String type) {
-        this.id = id;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.timestamp = timestamp;
-        this.type = type;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getProductId() {
         return productId;
@@ -79,16 +57,5 @@ public class ProductTransaction {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ProductTransaction)) return false;
-        ProductTransaction that = (ProductTransaction) o;
-        return id == that.id && productId == that.productId;
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, productId);
-    }
 }
