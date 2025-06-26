@@ -44,7 +44,6 @@ public class Server {
         }
 
         try {
-            // Налаштування SSL
             char[] password = "password".toCharArray();
             KeyStore ks = KeyStore.getInstance("JKS");
             ks.load(new FileInputStream("keystore.jks"), password);
@@ -80,7 +79,6 @@ public class Server {
         }
     }
 
-    // Базовий CORS handler
     static class CORSHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -94,7 +92,6 @@ public class Server {
                 return;
             }
 
-            // Якщо це не OPTIONS, передаємо далі
             String response = "API Server is running";
             exchange.sendResponseHeaders(200, response.getBytes().length);
             try (OutputStream os = exchange.getResponseBody()) {
@@ -255,7 +252,6 @@ public class Server {
         }
     }
 
-    // Обробник для видалення групи
     static class DeleteGroupHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -285,7 +281,6 @@ public class Server {
         }
     }
 
-    // Обробник для отримання всіх груп
     static class GroupsHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -316,7 +311,6 @@ public class Server {
         }
     }
 
-    // Обробник для отримання всіх товарів
     static class ProductsHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -347,7 +341,6 @@ public class Server {
         }
     }
 
-    // Обробник для додавання групи
     static class AddGroupHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -381,7 +374,6 @@ public class Server {
         }
     }
 
-    // Обробник для додавання товару
     static class AddProductHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -409,7 +401,6 @@ public class Server {
                         product.setDescription(jsonObject.get("description").getAsString());
                     }
 
-                    // Початкова кількість = 0
                     product.setQuantity(0);
 
                     productDAO.addProduct(product);
@@ -424,7 +415,6 @@ public class Server {
         }
     }
 
-    // Обробник для поповнення складу
     static class AddStockHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -455,7 +445,6 @@ public class Server {
         }
     }
 
-    // Обробник для списання товару
     static class RemoveStockHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -486,7 +475,6 @@ public class Server {
         }
     }
 
-    // Утилітарні методи
     private static void setCORSHeaders(HttpExchange exchange) {
         Headers headers = exchange.getResponseHeaders();
         headers.add("Access-Control-Allow-Origin", "*");

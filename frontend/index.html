@@ -6,219 +6,213 @@
   <title>Управління складом</title>
   <style>
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
     }
 
     .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      overflow: hidden;
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        overflow: hidden;
     }
 
     .header {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      color: white;
-      padding: 20px;
-      text-align: center;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
     }
 
     .tabs {
-      display: flex;
-      background: #f8f9fa;
-      border-bottom: 1px solid #dee2e6;
+        display: flex;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
     }
 
     .tab {
-      flex: 1;
-      padding: 15px;
-      text-align: center;
-      cursor: pointer;
-      background: #f8f9fa;
-      border: none;
-      transition: all 0.3s;
+        flex: 1;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        background: #f8f9fa;
+        border: none;
+        transition: all 0.3s;
     }
 
     .tab:hover {
-      background: #e9ecef;
+        background: #e9ecef;
     }
 
     .tab.active {
-      background: #007bff;
-      color: white;
+        background: #007bff;
+        color: white;
     }
 
     .tab-content {
-      display: none;
-      padding: 20px;
+        display: none;
+        padding: 20px;
     }
 
     .tab-content.active {
-      display: block;
+        display: block;
     }
 
     .form-group {
-      margin-bottom: 15px;
-    }
-
-
-    .search-input {
-      max-width: 300px;
-      margin-bottom: 10px;
+        margin-bottom: 15px;
     }
 
     label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #333;
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
     }
 
     input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: border-color 0.3s;
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s;
     }
 
     input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #007bff;
+        outline: none;
+        border-color: #007bff;
     }
 
     button {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: transform 0.2s;
-      margin-right: 10px;
-      margin-bottom: 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: transform 0.2s;
+        margin-right: 10px;
+        margin-bottom: 10px;
     }
 
     button:hover {
-      transform: translateY(-2px);
+        transform: translateY(-2px);
     }
 
     .btn-danger {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
     }
 
     .btn-success {
-      background: linear-gradient(135deg, #5ee7df 0%, #66a6ff 100%);
+        background: linear-gradient(135deg, #5ee7df 0%, #66a6ff 100%);
     }
 
     .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
     }
 
     .data-table th, .data-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
     }
 
     .data-table th {
-      background: #f8f9fa;
-      font-weight: bold;
+        background: #f8f9fa;
+        font-weight: bold;
     }
 
     .data-table tbody tr:nth-child(even) {
-      background: #f8f9fa;
+        background: #f8f9fa;
     }
 
     .data-table tbody tr:hover {
-      background: #e3f2fd;
+        background: #e3f2fd;
     }
 
     .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
     }
 
     .modal-content {
-      background-color: white;
-      margin: 5% auto;
-      padding: 20px;
-      border-radius: 15px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 80vh;
-      overflow-y: auto;
+        background-color: white;
+        margin: 5% auto;
+        padding: 20px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 80vh;
+        overflow-y: auto;
     }
 
     .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
     }
 
     .close:hover {
-      color: black;
+        color: black;
     }
 
     .message {
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      display: none;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        display: none;
     }
 
     .message.success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
     }
 
     .message.error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
     }
 
     .form-row {
-      display: flex;
-      gap: 15px;
+        display: flex;
+        gap: 15px;
     }
 
     .form-row .form-group {
-      flex: 1;
+        flex: 1;
     }
 
     .stock-operations {
-      display: flex;
-      gap: 10px;
-      align-items: center;
+        display: flex;
+        gap: 10px;
+        align-items: center;
     }
 
     .stock-operations input {
-      width: 80px;
+        width: 80px;
     }
   </style>
 </head>
@@ -230,16 +224,17 @@
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="showTab(event, 'groups')">📦 Групи товарів</button>
-    <button class="tab" onclick="showTab(event, 'products')">🛍️ Товари</button>
-    <button class="tab" onclick="showTab(event, 'stock')">📊 Склад</button>
+    <button class="tab active" onclick="showTab('groups')">📦 Групи товарів</button>
+    <button class="tab" onclick="showTab('products')">🛍️ Товари</button>
+    <button class="tab" onclick="showTab('stock')">📊 Склад</button>
   </div>
 
+  <!-- Групи товарів -->
   <div id="groups" class="tab-content active">
     <h2>Управління групами товарів</h2>
 
-    <div class="form-group search-input">
-      <input type="text" id="groupSearch" placeholder="🔍 Пошук...">
+    <div class="form-group" style="max-width: 300px; margin-bottom:10px;">
+      <input type="text" id="groupSearch" placeholder="🔍 Пошук..." oninput="displayGroups(this.value)">
     </div>
 
     <button onclick="openAddGroupModal()">➕ Додати групу</button>
@@ -260,11 +255,12 @@
     </table>
   </div>
 
+  <!-- Товари -->
   <div id="products" class="tab-content">
     <h2>Управління товарами</h2>
 
-    <div class="form-group search-input">
-      <input type="text" id="productSearch" placeholder="🔍 Пошук...">
+    <div class="form-group" style="max-width: 300px; margin-bottom:10px;">
+      <input type="text" id="productSearch" placeholder="🔍 Пошук..." oninput="displayProducts(this.value)">
     </div>
 
     <button onclick="openAddProductModal()">➕ Додати товар</button>
@@ -288,6 +284,7 @@
     </table>
   </div>
 
+  <!-- Склад -->
   <div id="stock" class="tab-content">
     <h2>Операції зі складом</h2>
 
@@ -311,6 +308,9 @@
   </div>
 </div>
 
+<!-- Модальні вікна -->
+
+<!-- Додати/редагувати групу -->
 <div id="groupModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('groupModal')">&times;</span>
@@ -331,6 +331,7 @@
   </div>
 </div>
 
+<!-- Статистика по групі -->
 <div id="groupStatsModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('groupStatsModal')">&times;</span>
@@ -351,6 +352,7 @@
   </div>
 </div>
 
+<!-- Додати/редагувати товар -->
 <div id="productModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('productModal')">&times;</span>
@@ -392,72 +394,77 @@
   let groups = [];
   let products = [];
 
+  // Управління вкладками
+  function showTab(tabName) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-  function showTab(event, tabName) {
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tabName).classList.add('active');
 
-    event.currentTarget.classList.add('active');
-    document.getElementById(tabName).classList.add('active');
-
-    if (tabName === 'groups') loadGroups();
-    if (tabName === 'products') loadProducts();
-    if (tabName === 'stock') loadProducts();
+      if (tabName === 'groups') loadGroups();
+      if (tabName === 'products') loadProducts();
+      if (tabName === 'stock') loadProducts();
   }
 
-
+  // Утилітарні функції
   function showMessage(elementId, message, type) {
-    const el = document.getElementById(elementId);
-    el.textContent = message;
-    el.className = `message ${type}`;
-    el.style.display = 'block';
-    setTimeout(() => el.style.display = 'none', 5000);
+      const el = document.getElementById(elementId);
+      el.textContent = message;
+      el.className = `message ${type}`;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 5000);
   }
 
   function openModal(modalId) {
-    document.getElementById(modalId).style.display = 'block';
+      document.getElementById(modalId).style.display = 'block';
   }
 
   function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+      document.getElementById(modalId).style.display = 'none';
   }
 
-
+  // Завантаження даних
   async function loadGroups() {
-    try {
-      const response = await fetch(`${API_BASE}/groups`);
-      groups = await response.json();
-      displayGroups();
-      updateProductGroupSelect();
-    } catch (error) {
-      showMessage('groupsMessage', 'Помилка завантаження груп: ' + error.message, 'error');
-    }
+      try {
+          const response = await fetch(`${API_BASE}/groups`);
+          groups = await response.json();
+          displayGroups();
+          updateProductGroupSelect();
+      } catch (error) {
+          showMessage('groupsMessage', 'Помилка завантаження груп: ' + error.message, 'error');
+      }
   }
 
   async function loadProducts() {
-    try {
-      const response = await fetch(`${API_BASE}/products`);
-      products = await response.json();
-      displayProducts();
-      displayStock();
-    } catch (error) {
-      showMessage('productsMessage', 'Помилка завантаження товарів: ' + error.message, 'error');
-    }
+      try {
+          const response = await fetch(`${API_BASE}/products`);
+          products = await response.json();
+          displayProducts();
+          displayStock();
+      } catch (error) {
+          showMessage('productsMessage', 'Помилка завантаження товарів: ' + error.message, 'error');
+      }
   }
 
+  // Відображення груп з фільтрацією
+  function displayGroups(search = undefined) {
+      if (search === undefined) {
+          const inp = document.getElementById('groupSearch');
+          search = inp ? inp.value : '';
+      }
+      search = (search || '').toLowerCase();
 
-  function displayGroups() {
-    const search = document.getElementById('groupSearch').value.toLowerCase();
-    const tbody = document.querySelector('#groupsTable tbody');
-    tbody.innerHTML = '';
+      const tbody = document.querySelector('#groupsTable tbody');
+      tbody.innerHTML = '';
 
-    const filteredGroups = groups.filter(group => {
-      return Object.values(group).some(val => String(val).toLowerCase().includes(search));
-    });
+      const filteredGroups = groups.filter(group => {
+          return Object.values(group).some(val => String(val).toLowerCase().includes(search));
+      });
 
-    filteredGroups.forEach(group => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
+      filteredGroups.forEach(group => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
               <td>${group.id}</td>
               <td>${group.name}</td>
               <td>${group.description || ''}</td>
@@ -467,26 +474,31 @@
                   <button onclick="deleteGroup(${group.id})" class="btn-danger">🗑️ Видалити</button>
               </td>
           `;
-      tbody.appendChild(row);
-    });
+          tbody.appendChild(row);
+      });
   }
 
+  // Відображення товарів з фільтрацією
+  function displayProducts(search = undefined) {
+      if (search === undefined) {
+          const inp = document.getElementById('productSearch');
+          search = inp ? inp.value : '';
+      }
+      search = (search || '').toLowerCase();
 
-  function displayProducts() {
-    const search = document.getElementById('productSearch').value.toLowerCase();
-    const tbody = document.querySelector('#productsTable tbody');
-    tbody.innerHTML = '';
+      const tbody = document.querySelector('#productsTable tbody');
+      tbody.innerHTML = '';
 
-    const filteredProducts = products.filter(product => {
-      const group = groups.find(g => g.id === product.groupId);
-      return [product.id, product.name, product.manufacturer, product.quantity, product.pricePerUnit,
-        group ? group.name : ''].some(val => String(val).toLowerCase().includes(search));
-    });
+      const filteredProducts = products.filter(product => {
+          const group = groups.find(g => g.id === product.groupId);
+          return [product.id, product.name, product.manufacturer, product.quantity, product.pricePerUnit,
+                  group ? group.name : ''].some(val => String(val).toLowerCase().includes(search));
+      });
 
-    filteredProducts.forEach(product => {
-      const group = groups.find(g => g.id === product.groupId);
-      const row = document.createElement('tr');
-      row.innerHTML = `
+      filteredProducts.forEach(product => {
+          const group = groups.find(g => g.id === product.groupId);
+          const row = document.createElement('tr');
+          row.innerHTML = `
               <td>${product.id}</td>
               <td>${product.name}</td>
               <td>${group ? group.name : 'Невідома група'}</td>
@@ -498,20 +510,21 @@
                   <button onclick="deleteProduct(${product.id})" class="btn-danger">🗑️ Видалити</button>
               </td>
           `;
-      tbody.appendChild(row);
-    });
+          tbody.appendChild(row);
+      });
   }
 
-
+  // Відображення складських операцій
   function displayStock() {
-    const tbody = document.querySelector('#stockTable tbody');
-    tbody.innerHTML = '';
-    let totalStockValue = 0;
+      const tbody = document.querySelector('#stockTable tbody');
+      tbody.innerHTML = '';
 
-    products.forEach(product => {
-      const group = groups.find(g => g.id === product.groupId);
-      const row = document.createElement('tr');
-      row.innerHTML = `
+      let totalStockValue = 0;
+
+      products.forEach(product => {
+          const group = groups.find(g => g.id === product.groupId);
+          const row = document.createElement('tr');
+          row.innerHTML = `
               <td>${product.name}</td>
               <td>${group ? group.name : 'Невідома група'}</td>
               <td><strong>${product.quantity}</strong></td>
@@ -524,275 +537,299 @@
                   <button onclick="removeStock(${product.id})" class="btn-danger">➖ Списати</button>
               </td>
           `;
-      tbody.appendChild(row);
-      totalStockValue += product.quantity * product.pricePerUnit;
-    });
+          tbody.appendChild(row);
+          totalStockValue += product.quantity * product.pricePerUnit;
+      });
 
-    const summaryRow = document.createElement('tr');
-    summaryRow.innerHTML = `
+      // Підсумок
+      const summaryRow = document.createElement('tr');
+      summaryRow.innerHTML = `
           <td colspan="4" style="text-align:right;font-weight:bold;">Загальна вартість:</td>
           <td colspan="2" style="font-weight:bold;">${totalStockValue.toFixed(2)} грн</td>
       `;
-    tbody.appendChild(summaryRow);
+      tbody.appendChild(summaryRow);
   }
 
-
+  // Операції з групами
   function openAddGroupModal() {
-    document.getElementById('groupModalTitle').textContent = 'Додати групу';
-    document.getElementById('groupForm').reset();
-    document.getElementById('groupId').value = '';
-    openModal('groupModal');
+      document.getElementById('groupModalTitle').textContent = 'Додати групу';
+      document.getElementById('groupForm').reset();
+      document.getElementById('groupId').value = '';
+      openModal('groupModal');
   }
 
   async function editGroup(id) {
-    const group = groups.find(g => g.id === id);
-    if (!group) return;
+      const group = groups.find(g => g.id === id);
+      if (!group) return;
 
-    document.getElementById('groupModalTitle').textContent = 'Редагувати групу';
-    document.getElementById('groupId').value = group.id;
-    document.getElementById('groupName').value = group.name;
-    document.getElementById('groupDescription').value = group.description || '';
-    openModal('groupModal');
+      document.getElementById('groupModalTitle').textContent = 'Редагувати групу';
+      document.getElementById('groupId').value = group.id;
+      document.getElementById('groupName').value = group.name;
+      document.getElementById('groupDescription').value = group.description || '';
+      openModal('groupModal');
   }
 
   async function deleteGroup(id) {
-    if (!confirm('Видалити групу? Всі товари в цій групі також будуть видалені!')) return;
-    try {
-      const response = await fetch(`${API_BASE}/delete-group`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
-      });
-      if (response.ok) {
-        showMessage('groupsMessage', 'Групу успішно видалено', 'success');
-        loadGroups();
-        loadProducts();
-      } else {
-        const error = await response.text();
-        showMessage('groupsMessage', 'Помилка видалення: ' + error, 'error');
+      if (!confirm('Видалити групу? Всі товари в цій групі також будуть видалені!')) return;
+
+      try {
+          const response = await fetch(`${API_BASE}/delete-group`, {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id })
+          });
+
+          if (response.ok) {
+              showMessage('groupsMessage', 'Групу успішно видалено', 'success');
+              loadGroups();
+          } else {
+              const error = await response.text();
+              showMessage('groupsMessage', 'Помилка видалення: ' + error, 'error');
+          }
+      } catch (error) {
+          showMessage('groupsMessage', 'Помилка видалення: ' + error.message, 'error');
       }
-    } catch (error) {
-      showMessage('groupsMessage', 'Помилка видалення: ' + error.message, 'error');
-    }
   }
 
-
+  // Операції з товарами
   function openAddProductModal() {
-    document.getElementById('productModalTitle').textContent = 'Додати товар';
-    document.getElementById('productForm').reset();
-    document.getElementById('productId').value = '';
-    openModal('productModal');
+      document.getElementById('productModalTitle').textContent = 'Додати товар';
+      document.getElementById('productForm').reset();
+      document.getElementById('productId').value = '';
+      openModal('productModal');
   }
 
   async function editProduct(id) {
-    const product = products.find(p => p.id === id);
-    if (!product) return;
-    document.getElementById('productModalTitle').textContent = 'Редагувати товар';
-    document.getElementById('productId').value = product.id;
-    document.getElementById('productName').value = product.name;
-    document.getElementById('productGroup').value = product.groupId;
-    document.getElementById('productManufacturer').value = product.manufacturer || '';
-    document.getElementById('productDescription').value = product.description || '';
-    document.getElementById('productPrice').value = product.pricePerUnit;
-    openModal('productModal');
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+
+      document.getElementById('productModalTitle').textContent = 'Редагувати товар';
+      document.getElementById('productId').value = product.id;
+      document.getElementById('productName').value = product.name;
+      document.getElementById('productGroup').value = product.groupId;
+      document.getElementById('productManufacturer').value = product.manufacturer || '';
+      document.getElementById('productDescription').value = product.description || '';
+      document.getElementById('productPrice').value = product.pricePerUnit;
+      openModal('productModal');
   }
 
   async function deleteProduct(id) {
-    if (!confirm('Видалити товар?')) return;
-    try {
-      const response = await fetch(`${API_BASE}/delete-product`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
-      });
-      if (response.ok) {
-        showMessage('productsMessage', 'Товар успішно видалено', 'success');
-        loadProducts();
-      } else {
-        const error = await response.text();
-        showMessage('productsMessage', 'Помилка видалення: ' + error, 'error');
+      if (!confirm('Видалити товар?')) return;
+
+      try {
+          const response = await fetch(`${API_BASE}/delete-product`, {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id })
+          });
+
+          if (response.ok) {
+              showMessage('productsMessage', 'Товар успішно видалено', 'success');
+              loadProducts();
+          } else {
+              const error = await response.text();
+              showMessage('productsMessage', 'Помилка видалення: ' + error, 'error');
+          }
+      } catch (error) {
+          showMessage('productsMessage', 'Помилка видалення: ' + error.message, 'error');
       }
-    } catch (error) {
-      showMessage('productsMessage', 'Помилка видалення: ' + error.message, 'error');
-    }
   }
 
-
+  // Складські операції
   async function addStock(productId) {
-    const qtyInput = document.getElementById(`addQty_${productId}`);
-    const quantity = parseInt(qtyInput.value);
-    if (!quantity || quantity <= 0) {
-      showMessage('stockMessage', 'Введіть коректну кількість', 'error');
-      return;
-    }
-    try {
-      const response = await fetch(`${API_BASE}/add-stock`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, quantity })
-      });
-      if (response.ok) {
-        showMessage('stockMessage', 'Склад успішно поповнено', 'success');
-        qtyInput.value = '';
-        loadProducts();
-      } else {
-        const error = await response.text();
-        showMessage('stockMessage', 'Помилка поповнення: ' + error, 'error');
+      const qtyInput = document.getElementById(`addQty_${productId}`);
+      const quantity = parseInt(qtyInput.value);
+
+      if (!quantity || quantity <= 0) {
+          showMessage('stockMessage', 'Введіть коректну кількість', 'error');
+          return;
       }
-    } catch (error) {
-      showMessage('stockMessage', 'Помилка поповнення: ' + error.message, 'error');
-    }
+
+      try {
+          const response = await fetch(`${API_BASE}/add-stock`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ productId, quantity })
+          });
+
+          if (response.ok) {
+              showMessage('stockMessage', 'Склад успішно поповнено', 'success');
+              qtyInput.value = '';
+              loadProducts();
+          } else {
+              const error = await response.text();
+              showMessage('stockMessage', 'Помилка поповнення: ' + error, 'error');
+          }
+      } catch (error) {
+          showMessage('stockMessage', 'Помилка поповнення: ' + error.message, 'error');
+      }
   }
 
   async function removeStock(productId) {
-    const qtyInput = document.getElementById(`removeQty_${productId}`);
-    const quantity = parseInt(qtyInput.value);
-    if (!quantity || quantity <= 0) {
-      showMessage('stockMessage', 'Введіть коректну кількість', 'error');
-      return;
-    }
-    try {
-      const response = await fetch(`${API_BASE}/remove-stock`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, quantity })
-      });
-      if (response.ok) {
-        showMessage('stockMessage', 'Товар успішно списано', 'success');
-        qtyInput.value = '';
-        loadProducts();
-      } else {
-        const error = await response.text();
-        showMessage('stockMessage', 'Помилка списання: ' + error, 'error');
+      const qtyInput = document.getElementById(`removeQty_${productId}`);
+      const quantity = parseInt(qtyInput.value);
+
+      if (!quantity || quantity <= 0) {
+          showMessage('stockMessage', 'Введіть коректну кількість', 'error');
+          return;
       }
-    } catch (error) {
-      showMessage('stockMessage', 'Помилка списання: ' + error.message, 'error');
-    }
+
+      try {
+          const response = await fetch(`${API_BASE}/remove-stock`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ productId, quantity })
+          });
+
+          if (response.ok) {
+              showMessage('stockMessage', 'Товар успішно списано', 'success');
+              qtyInput.value = '';
+              loadProducts();
+          } else {
+              const error = await response.text();
+              showMessage('stockMessage', 'Помилка списання: ' + error, 'error');
+          }
+      } catch (error) {
+          showMessage('stockMessage', 'Помилка списання: ' + error.message, 'error');
+      }
   }
 
-
+  // Обробка форм
   document.getElementById('groupForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const groupData = {
-      name: document.getElementById('groupName').value,
-      description: document.getElementById('groupDescription').value
-    };
-    const groupId = document.getElementById('groupId').value;
-    let url = `${API_BASE}/add-group`;
-    let method = 'POST';
-    if (groupId) {
-      url = `${API_BASE}/update-group`;
-      method = 'PUT';
-      groupData.id = parseInt(groupId);
-    }
-    try {
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(groupData)
-      });
-      if (response.ok) {
-        showMessage('groupsMessage', groupId ? 'Групу оновлено' : 'Групу додано', 'success');
-        closeModal('groupModal');
-        loadGroups();
-      } else {
-        const error = await response.text();
-        showMessage('groupsMessage', 'Помилка збереження: ' + error, 'error');
+      e.preventDefault();
+
+      const groupData = {
+          name: document.getElementById('groupName').value,
+          description: document.getElementById('groupDescription').value
+      };
+
+      const groupId = document.getElementById('groupId').value;
+      let url = `${API_BASE}/add-group`;
+      let method = 'POST';
+
+      if (groupId) {
+          url = `${API_BASE}/update-group`;
+          method = 'PUT';
+          groupData.id = parseInt(groupId);
       }
-    } catch (error) {
-      showMessage('groupsMessage', 'Помилка збереження: ' + error.message, 'error');
-    }
+
+      try {
+          const response = await fetch(url, {
+              method,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(groupData)
+          });
+
+          if (response.ok) {
+              showMessage('groupsMessage', groupId ? 'Групу оновлено' : 'Групу додано', 'success');
+              closeModal('groupModal');
+              loadGroups();
+          } else {
+              const error = await response.text();
+              showMessage('groupsMessage', 'Помилка збереження: ' + error, 'error');
+          }
+      } catch (error) {
+          showMessage('groupsMessage', 'Помилка збереження: ' + error.message, 'error');
+      }
   });
 
   document.getElementById('productForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const productData = {
-      name: document.getElementById('productName').value,
-      groupId: parseInt(document.getElementById('productGroup').value),
-      manufacturer: document.getElementById('productManufacturer').value,
-      description: document.getElementById('productDescription').value,
-      price: document.getElementById('productPrice').value
-    };
-    const productId = document.getElementById('productId').value;
-    let url = `${API_BASE}/add-product`;
-    let method = 'POST';
-    if (productId) {
-      url = `${API_BASE}/update-product`;
-      method = 'PUT';
-      productData.id = parseInt(productId);
-    }
-    try {
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productData)
-      });
-      if (response.ok) {
-        showMessage('productsMessage', productId ? 'Товар оновлено' : 'Товар додано', 'success');
-        closeModal('productModal');
-        loadProducts();
-      } else {
-        const error = await response.text();
-        showMessage('productsMessage', 'Помилка збереження: ' + error, 'error');
+      e.preventDefault();
+
+      const productData = {
+          name: document.getElementById('productName').value,
+          groupId: parseInt(document.getElementById('productGroup').value),
+          manufacturer: document.getElementById('productManufacturer').value,
+          description: document.getElementById('productDescription').value,
+          price: document.getElementById('productPrice').value
+      };
+
+      const productId = document.getElementById('productId').value;
+      let url = `${API_BASE}/add-product`;
+      let method = 'POST';
+
+      if (productId) {
+          url = `${API_BASE}/update-product`;
+          method = 'PUT';
+          productData.id = parseInt(productId);
       }
-    } catch (error) {
-      showMessage('productsMessage', 'Помилка збереження: ' + error.message, 'error');
-    }
+
+      try {
+          const response = await fetch(url, {
+              method,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(productData)
+          });
+
+          if (response.ok) {
+              showMessage('productsMessage', productId ? 'Товар оновлено' : 'Товар додано', 'success');
+              closeModal('productModal');
+              loadProducts();
+          } else {
+              const error = await response.text();
+              showMessage('productsMessage', 'Помилка збереження: ' + error, 'error');
+          }
+      } catch (error) {
+          showMessage('productsMessage', 'Помилка збереження: ' + error.message, 'error');
+      }
   });
 
-
+  // Оновлення селекту груп у формі товару
   function updateProductGroupSelect() {
-    const select = document.getElementById('productGroup');
-    select.innerHTML = '<option value="">Оберіть групу</option>';
-    groups.forEach(group => {
-      const option = document.createElement('option');
-      option.value = group.id;
-      option.textContent = group.name;
-      select.appendChild(option);
-    });
+      const select = document.getElementById('productGroup');
+      select.innerHTML = '<option value="">Оберіть групу</option>';
+
+      groups.forEach(group => {
+          const option = document.createElement('option');
+          option.value = group.id;
+          option.textContent = group.name;
+          select.appendChild(option);
+      });
   }
 
-
+  // Закриття модальних вікон при кліку поза ними
   window.onclick = function(event) {
-    if (event.target.classList.contains('modal')) {
-      event.target.style.display = 'none';
-    }
+      if (event.target.classList.contains('modal')) {
+          event.target.style.display = 'none';
+      }
   }
 
-
+  // Статистика групи
   function openGroupStats(groupId) {
-    const group = groups.find(g => g.id === groupId);
-    if (!group) return;
-    document.getElementById('groupStatsTitle').textContent = `Статистика групи: ${group.name}`;
-    const tbody = document.querySelector('#groupStatsTable tbody');
-    tbody.innerHTML = '';
-    let total = 0;
-    const groupProducts = products.filter(p => p.groupId === groupId);
-    groupProducts.forEach(p => {
-      const row = document.createElement('tr');
-      const value = p.quantity * p.pricePerUnit;
-      total += value;
-      row.innerHTML = `
+      const group = groups.find(g => g.id === groupId);
+      if (!group) return;
+      document.getElementById('groupStatsTitle').textContent = `Статистика групи: ${group.name}`;
+
+      const tbody = document.querySelector('#groupStatsTable tbody');
+      tbody.innerHTML = '';
+      let total = 0;
+
+      const groupProducts = products.filter(p => p.groupId === groupId);
+      groupProducts.forEach(p => {
+          const row = document.createElement('tr');
+          const value = p.quantity * p.pricePerUnit;
+          total += value;
+          row.innerHTML = `
               <td>${p.id}</td>
               <td>${p.name}</td>
               <td>${p.quantity}</td>
               <td>${p.pricePerUnit} грн</td>
               <td>${value.toFixed(2)} грн</td>
           `;
-      tbody.appendChild(row);
-    });
-    document.getElementById('groupTotalValue').textContent = `Загальна вартість товарів у групі: ${total.toFixed(2)} грн`;
-    openModal('groupStatsModal');
+          tbody.appendChild(row);
+      });
+      document.getElementById('groupTotalValue').textContent = `Загальна вартість товарів у групі: ${total.toFixed(2)} грн`;
+      openModal('groupStatsModal');
   }
 
-
+  // Ініціалізація
   document.addEventListener('DOMContentLoaded', () => {
-
-    Promise.all([loadGroups(), loadProducts()]);
-
-
-    document.getElementById('groupSearch').addEventListener('input', displayGroups);
-    document.getElementById('productSearch').addEventListener('input', displayProducts);
+      loadGroups();
+      // Підключаємо слухачі вводу для пошуку
+      const gInp = document.getElementById('groupSearch');
+      if (gInp) gInp.addEventListener('input', () => displayGroups(gInp.value));
+      const pInp = document.getElementById('productSearch');
+      if (pInp) pInp.addEventListener('input', () => displayProducts(pInp.value));
   });
 </script>
 </body>

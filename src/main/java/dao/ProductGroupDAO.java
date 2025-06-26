@@ -15,7 +15,7 @@ public class ProductGroupDAO {
 
     public void addGroup(ProductGroup group) throws SQLException {
         if (isGroupNameExists(group.getName())) {
-            throw new SQLException("Group name '" + group.getName() + "' already exists. Group names must be unique.");
+            throw new SQLException("Група '" + group.getName() + "' вже є . група має бути унікальна.");
         }
 
         String sql = "INSERT INTO product_groups (name, description) VALUES (?, ?)";
@@ -55,7 +55,7 @@ public class ProductGroupDAO {
 
     public void updateGroup(ProductGroup group) throws SQLException {
         if (isGroupNameExistsForOthers(group.getName(), group.getId())) {
-            throw new SQLException("Group name '" + group.getName() + "' already exists. Group names must be unique.");
+            throw new SQLException("Group name '" + group.getName() + "' вже є . група має бути унікальна.");
         }
 
         String sql = "UPDATE product_groups SET name = ?, description = ? WHERE id = ?";

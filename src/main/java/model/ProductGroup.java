@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Objects;
-
 public class ProductGroup {
     private int id;
     private String name;
@@ -10,18 +8,7 @@ public class ProductGroup {
     public ProductGroup() {
     }
 
-    public ProductGroup(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
 
-    public ProductGroup(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-
-    // Геттери та сеттери
     public int getId() {
         return id;
     }
@@ -46,7 +33,6 @@ public class ProductGroup {
         this.description = description;
     }
 
-    // Перевизначення toString()
     @Override
     public String toString() {
         return "ProductGroup{" +
@@ -56,17 +42,4 @@ public class ProductGroup {
                 '}';
     }
 
-    // equals() і hashCode() (опціонально, для колекцій і порівнянь)
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ProductGroup)) return false;
-        ProductGroup that = (ProductGroup) o;
-        return id == that.id && Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
 }

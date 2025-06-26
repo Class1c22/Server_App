@@ -1,8 +1,5 @@
 import db_connect.DBManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 import dao.ProductTransactionDAO;
 import dao.ProductDAO;
 
@@ -18,42 +15,37 @@ public class ProductTransactionDAOTest {
 
     private ProductDAO productDAO;
     private ProductTransactionDAO transactionDAO;
-    private Connection connection; // Use a real connection for tests
+    private Connection connection;
 
     @BeforeEach
     void setUp() throws SQLException {
-        // Establish a real database connection for testing
         connection = DBManager.getConnection();
-        connection.setAutoCommit(false); // We'll manage transactions manually for tests
+        connection.setAutoCommit(false);
 
-        // Initialize DAOs with the real connection (or a factory that provides it)
-        // Assuming ProductDAO also uses a Connection
-        productDAO = new ProductDAO(connection); // Or ProductDAO(connection) if it needs it directly
-        transactionDAO = new ProductTransactionDAO(productDAO); // Assuming it takes ProductDAO
+        productDAO = new ProductDAO(connection);
+        transactionDAO = new ProductTransactionDAO(productDAO, connection);
 
-        // Clean up any existing test data before each test
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate("DELETE FROM inventory_operations");
-            stmt.executeUpdate("DELETE FROM products"); // Assuming products might be created/modified
+            stmt.executeUpdate("DELETE FROM products");
         }
-        // Insert a test product if needed for your tests to pass
+
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO products (id, name, stock) VALUES (?, ?, ?)")) {
+                "INSERT INTO products (id, name, quantity) VALUES (?, ?, ?)")) {
             ps.setInt(1, 1);
             ps.setString(2, "Test Product 1");
-            ps.setInt(3, 10); // Initial stock
+            ps.setInt(3, 10);
             ps.executeUpdate();
 
             ps.setInt(1, 2);
             ps.setString(2, "Test Product 2");
-            ps.setInt(3, 10); // Initial stock
+            ps.setInt(3, 10);
             ps.executeUpdate();
         }
     }
 
     @AfterEach
     void tearDown() throws SQLException {
-        // Rollback any changes made during the test to ensure test isolation
         if (connection != null) {
             connection.rollback();
             connection.close();
@@ -61,60 +53,50 @@ public class ProductTransactionDAOTest {
     }
 
     @Test
-    @DisplayName("processIncoming should add stock and insert transaction")
-    void processIncoming_shouldAddStockAndInsertTransaction() throws Exception {
+    @DisplayName("add stock")
+    void AddStock() throws Exception {
         int productId = 1;
-        int initialStock = getProductStock(productId); // Get initial stock from DB
+        int initialStock = getProductStock(productId);
         int quantity = 5;
 
         transactionDAO.processIncoming(productId, quantity);
 
-        // Verify stock has been increased in the actual database
         assertEquals(initialStock + quantity, getProductStock(productId),
                 "Product stock should be increased after incoming transaction");
 
-        // Verify a transaction record has been inserted
-        assertTrue(hasTransactionRecord(productId, "INCOMING", quantity),
+        assertTrue(hasTransactionRecord(productId, "IN", quantity),
                 "Incoming transaction record should be found in inventory_operations");
     }
 
     @Test
-    @DisplayName("processOutgoing should remove stock and insert transaction")
-    void processOutgoing_shouldRemoveStockAndInsertTransaction() throws Exception {
+    @DisplayName("remove stock")
+    void RemoveStock() throws Exception {
         int productId = 2;
-        int initialStock = getProductStock(productId); // Get initial stock from DB
+        int initialStock = getProductStock(productId);
         int quantity = 3;
 
         transactionDAO.processOutgoing(productId, quantity);
 
-        // Verify stock has been decreased in the actual database
         assertEquals(initialStock - quantity, getProductStock(productId),
                 "Product stock should be decreased after outgoing transaction");
 
-        // Verify a transaction record has been inserted
-        assertTrue(hasTransactionRecord(productId, "OUTGOING", quantity),
+        assertTrue(hasTransactionRecord(productId, "OUT", quantity),
                 "Outgoing transaction record should be found in inventory_operations");
     }
 
-    /**
-     * Helper method to get the current stock of a product from the database.
-     */
     private int getProductStock(int productId) throws SQLException {
-        String sql = "SELECT stock FROM products WHERE id = ?";
+        String sql = "SELECT quantity FROM products WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, productId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("stock");
+                    return rs.getInt("quantity");
                 }
             }
         }
         throw new SQLException("Product with ID " + productId + " not found.");
     }
 
-    /**
-     * Helper method to check if a transaction record exists in the database.
-     */
     private boolean hasTransactionRecord(int productId, String operationType, int quantity) throws SQLException {
         String sql = "SELECT COUNT(*) FROM inventory_operations WHERE product_id = ? AND operation_type = ? AND quantity = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -129,4 +111,5 @@ public class ProductTransactionDAOTest {
         }
         return false;
     }
+
 }

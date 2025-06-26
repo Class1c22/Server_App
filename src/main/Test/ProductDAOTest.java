@@ -21,14 +21,14 @@ public class ProductDAOTest {
     static void setup() throws SQLException {
         productDAO = new ProductDAO(DBManager.getConnection());
 
-        try (Connection connection = DBManager.getConnection(); // ✅ Виправлено
+        try (Connection connection = DBManager.getConnection();
              Statement statement = connection.createStatement()) {
 
-            // Очистити таблиці
+
             statement.executeUpdate("DELETE FROM products");
             statement.executeUpdate("DELETE FROM product_groups");
 
-            // Додати тестову групу
+
             statement.executeUpdate("INSERT INTO product_groups (id, name, description) VALUES (1, 'TestGroup', 'Group for tests')");
         }
     }
@@ -125,16 +125,14 @@ public class ProductDAOTest {
 
     @AfterAll
     static void teardown() throws SQLException {
-        try (Connection connection = DBManager.getConnection(); // ✅ Виправлено
+        try (Connection connection = DBManager.getConnection();
              Statement statement = connection.createStatement()) {
 
-            // Очистити таблиці після тестів
             statement.executeUpdate("DELETE FROM products");
             statement.executeUpdate("DELETE FROM product_groups");
         }
     }
 
-    // Допоміжний метод для створення продукту
     private Product createTestProduct(String name) {
         Product product = new Product();
         product.setName(name);

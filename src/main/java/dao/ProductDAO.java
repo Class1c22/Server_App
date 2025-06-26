@@ -4,7 +4,7 @@ import model.Product;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
+
 
 public class ProductDAO {
 
@@ -16,7 +16,7 @@ public class ProductDAO {
 
     public void addProduct(Product product) throws SQLException {
         if (isProductNameExists(product.getName())) {
-            throw new SQLException("Product name '" + product.getName() + "' already exists. Product names must be unique.");
+            throw new SQLException("Цей продукт '" + product.getName() + "' уже існує. Требв щоб продукт був унікальний.");
         }
 
         String sql = "INSERT INTO products (name, description, manufacturer, quantity, price_per_unit, group_id) " +
@@ -36,7 +36,7 @@ public class ProductDAO {
 
     public void updateProduct(Product product) throws SQLException {
         if (isProductNameExistsForOthers(product.getName(), product.getId())) {
-            throw new SQLException("Product name '" + product.getName() + "' already exists. Product names must be unique.");
+            throw new SQLException("Цей продукт'" + product.getName() + "' уже існує. Треба зоб продукт був унікальний.");
         }
 
         String sql = "UPDATE products SET name = ?, description = ?, manufacturer = ?, quantity = ?, price_per_unit = ?, group_id = ? WHERE id = ?";
@@ -76,11 +76,11 @@ public class ProductDAO {
     public void removeStock(int productId, int quantity) throws SQLException {
         Product product = getProductById(productId);
         if (product == null) {
-            throw new SQLException("Product not found");
+            throw new SQLException("Продукт не знайдено");
         }
 
         if (product.getQuantity() < quantity) {
-            throw new SQLException("Insufficient stock. Available: " + product.getQuantity() + ", Requested: " + quantity);
+            throw new SQLException("Нема стільки товару на складі. додано: " + product.getQuantity() + ", запрошено: " + quantity);
         }
 
         String updateSql = "UPDATE products SET quantity = quantity - ? WHERE id = ?";
@@ -120,70 +120,7 @@ public class ProductDAO {
         return products;
     }
 
-    public List<Product> getProductsByGroupId(int groupId) throws SQLException {
-        List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM products WHERE group_id = ? ORDER BY name";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, groupId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    products.add(mapResultSetToProduct(rs));
-                }
-            }
-        }
-        return products;
-    }
-
-    public List<Product> searchProducts(String keyword) throws SQLException {
-        List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM products WHERE name LIKE ? OR description LIKE ? OR manufacturer LIKE ? ORDER BY name";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            String likeKeyword = "%" + keyword + "%";
-            stmt.setString(1, likeKeyword);
-            stmt.setString(2, likeKeyword);
-            stmt.setString(3, likeKeyword);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    products.add(mapResultSetToProduct(rs));
-                }
-            }
-        }
-
-        return products;
-    }
-
-    public BigDecimal getTotalInventoryValue() throws SQLException {
-        String sql = "SELECT SUM(quantity * price_per_unit) as total_value FROM products";
-
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            if (rs.next()) {
-                BigDecimal val = rs.getBigDecimal("total_value");
-                return val != null ? val : BigDecimal.ZERO;
-            }
-            return BigDecimal.ZERO;
-        }
-    }
-
-    public BigDecimal getGroupTotalValue(int groupId) throws SQLException {
-        String sql = "SELECT SUM(quantity * price_per_unit) as total_value FROM products WHERE group_id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, groupId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    BigDecimal val = rs.getBigDecimal("total_value");
-                    return val != null ? val : BigDecimal.ZERO;
-                }
-                return BigDecimal.ZERO;
-            }
-        }
-    }
 
     private boolean isProductNameExists(String name) throws SQLException {
         String sql = "SELECT COUNT(*) FROM products WHERE name = ?";
@@ -200,7 +137,7 @@ public class ProductDAO {
         }
     }
     public void addStock(Connection conn, int productId, int quantity) throws SQLException {
-        String sql = "UPDATE products SET stock = stock + ? WHERE id = ?";
+        String sql = "UPDATE products SET quantity = quantity + ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, quantity);
             stmt.setInt(2, productId);
@@ -209,7 +146,7 @@ public class ProductDAO {
     }
 
     public void removeStock(Connection conn, int productId, int quantity) throws SQLException {
-        String sql = "UPDATE products SET stock = stock - ? WHERE id = ?";
+        String sql = "UPDATE products SET quantity = quantity - ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, quantity);
             stmt.setInt(2, productId);

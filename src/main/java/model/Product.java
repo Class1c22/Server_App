@@ -10,10 +10,9 @@ public class Product {
     private String description;
     private String manufacturer;
     private int quantity;
-    private BigDecimal pricePerUnit; // Замість double
+    private BigDecimal pricePerUnit;
     private int groupId;
 
-    // Геттери та сеттери
     public int getId() {
         return id;
     }
